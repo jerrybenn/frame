@@ -27,6 +27,7 @@ export const categoryOptions = ["Movies", "Series", "Shows", "Anime"];
 export const continueWatchingCards = [
   {
     id: "cw-1",
+    detailId: "arcane-league-of-legends",
     title: "Arcane: League of Legends",
     elapsed: "51:16",
     progress: 55,
@@ -35,6 +36,7 @@ export const continueWatchingCards = [
   },
   {
     id: "cw-2",
+    detailId: "blade-runner-2049",
     title: "Blade Runner 2049",
     elapsed: "1h 25min",
     progress: 55,
@@ -43,6 +45,7 @@ export const continueWatchingCards = [
   },
   {
     id: "cw-3",
+    detailId: "martian",
     title: "The Martian",
     elapsed: "36min",
     progress: 34,
@@ -51,6 +54,7 @@ export const continueWatchingCards = [
   },
   {
     id: "cw-4",
+    detailId: "dune-part-two",
     title: "Dune: Part Two",
     elapsed: "S1.E3",
     progress: 72,
@@ -59,6 +63,7 @@ export const continueWatchingCards = [
   },
   {
     id: "cw-5",
+    detailId: "oppenheimer",
     title: "Oppenheimer",
     elapsed: "2h 08min",
     progress: 18,
@@ -70,6 +75,7 @@ export const continueWatchingCards = [
 export const heroSlides = [
   {
     id: "hero-1",
+    detailId: "how-to-train-your-dragon",
     title: "How to Train Your Dragon",
     subtitle: "Play trailer  2:30",
     duration: "1h 56min",
@@ -79,6 +85,7 @@ export const heroSlides = [
   },
   {
     id: "hero-2",
+    detailId: "oppenheimer",
     title: "Oppenheimer",
     subtitle: "Play trailer  3:12",
     duration: "3h 00min",
@@ -88,6 +95,7 @@ export const heroSlides = [
   },
   {
     id: "hero-3",
+    detailId: "dune-part-two",
     title: "Dune: Part Two",
     subtitle: "Play trailer  2:45",
     duration: "2h 46min",
@@ -97,6 +105,7 @@ export const heroSlides = [
   },
   {
     id: "hero-4",
+    detailId: "wild-robot",
     title: "The Wild Robot",
     subtitle: "Play trailer  2:08",
     duration: "1h 42min",
@@ -135,6 +144,7 @@ export const genres = [
 export const movies = [
   {
     id: "movie-1",
+    detailId: "lilo-and-stitch",
     title: "Lilo & Stitch",
     year: 2025,
     rating: 7.2,
@@ -143,6 +153,7 @@ export const movies = [
   },
   {
     id: "movie-2",
+    detailId: "straume",
     title: "Straume",
     year: 2024,
     rating: 7.9,
@@ -151,6 +162,7 @@ export const movies = [
   },
   {
     id: "movie-3",
+    detailId: "mission-impossible",
     title: "Mission: Impossible",
     year: 2025,
     rating: 8.2,
@@ -159,6 +171,7 @@ export const movies = [
   },
   {
     id: "movie-4",
+    detailId: "mufasa-the-lion-king",
     title: "Mufasa: The Lion King",
     year: 2024,
     rating: 6.6,
@@ -167,6 +180,7 @@ export const movies = [
   },
   {
     id: "movie-5",
+    detailId: "dune-part-two",
     title: "Dune: Part Two",
     year: 2024,
     rating: 8.5,

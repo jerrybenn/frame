@@ -1,4 +1,7 @@
 .movie-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
   transition: transform 220ms ease;
 }
 

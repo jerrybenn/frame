@@ -51,6 +51,7 @@
 
 .heroCarousel__card--active {
   animation: hero-card-enter 580ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  cursor: pointer;
 }
 
 .heroCarousel__card--layer {

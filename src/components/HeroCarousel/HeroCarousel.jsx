@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Heart, Play } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { heroSlides } from '../../data/homeContent'
 import './HeroCarousel.css'
 
@@ -8,6 +9,7 @@ function wrappedIndex(index, length) {
 }
 
 export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
+  const navigate = useNavigate()
   const [activeIndex, setActiveIndex] = useState(0)
   const [previousIndex, setPreviousIndex] = useState(null)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -104,6 +106,11 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
     setPreviousIndex(null)
   }, [])
 
+  const openActiveDetail = () => {
+    if (!activeSlide?.detailId) return
+    navigate(`/title/${activeSlide.detailId}`)
+  }
+
   if (!slideCount) return null
 
   return (
@@ -169,6 +176,10 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
           ) : null}
           <article
             className="heroCarousel__card heroCarousel__card--layer heroCarousel__card--active"
+            onClick={(event) => {
+              if (event.target.closest('button')) return
+              openActiveDetail()
+            }}
           >
             <img className="heroCarousel__media" src={activeSlide.image} alt={activeSlide.title} />
             <div className="heroCarousel__fade" />
@@ -183,7 +194,7 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
             </div>
 
             <footer className="heroCarousel__footer">
-              <button type="button" className="heroCarousel__cta">
+              <button type="button" className="heroCarousel__cta" onClick={openActiveDetail}>
                 <span className="heroCarousel__ctaIcon">
                   <Play size={15} fill="currentColor" />
                 </span>

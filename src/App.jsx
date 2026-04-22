@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ComingSoonPage } from './pages/ComingSoonPage/ComingSoonPage'
 import { FavoritesPage } from './pages/FavoritesPage/FavoritesPage'
+import { FilmDetailPage } from './pages/FilmDetailPage/FilmDetailPage'
 import { HomePage } from './pages/HomePage/HomePage'
 import { SettingsPage } from './pages/SettingsPage/SettingsPage'
 import { SupportPage } from './pages/SupportPage/SupportPage'
@@ -16,6 +17,7 @@ function App() {
         <Route path="/trending" element={<TrendingPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/support" element={<SupportPage />} />
+        <Route path="/title/:filmId" element={<FilmDetailPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

@@ -1,9 +1,12 @@
 import { Star } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import './MovieCard.css'
 
 export function MovieCard({ movie }) {
+  const detailPath = `/title/${movie.detailId ?? movie.id}`
+
   return (
-    <article className="movie-card">
+    <Link className="movie-card" to={detailPath} aria-label={`Open details for ${movie.title}`}>
       <img src={movie.image} alt={movie.title} className="movie-card__poster" />
       <h3>{movie.title}</h3>
       <p>
@@ -13,6 +16,6 @@ export function MovieCard({ movie }) {
           {movie.rating}
         </span>
       </p>
-    </article>
+    </Link>
   )
 }

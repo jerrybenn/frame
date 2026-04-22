@@ -1,69 +1,79 @@
-import { useCallback, useEffect, useState } from 'react'
-import Autoplay from 'embla-carousel-autoplay'
-import useEmblaCarousel from 'embla-carousel-react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, Heart, Play } from 'lucide-react'
 import { heroSlides } from '../data/homeContent'
 import './heroCarousel.css'
 
-export function HeroCarousel({ slides = heroSlides }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    {
-      loop: true,
-      align: 'start',
-      skipSnaps: false,
-      dragFree: false,
+function wrappedIndex(index, length) {
+  return (index + length) % length
+}
+
+export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const touchStartXRef = useRef(null)
+
+  const slideCount = slides.length
+
+  const goTo = useCallback(
+    (index) => {
+      if (!slideCount) return
+      setActiveIndex(wrappedIndex(index, slideCount))
     },
-    [Autoplay({ delay: 5000, stopOnMouseEnter: true, stopOnInteraction: false })],
+    [slideCount],
   )
 
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const goNext = useCallback(() => goTo(activeIndex + 1), [activeIndex, goTo])
+  const goPrev = useCallback(() => goTo(activeIndex - 1), [activeIndex, goTo])
 
   useEffect(() => {
-    if (!emblaApi) return undefined
-
-    const syncSelected = () => setSelectedIndex(emblaApi.selectedScrollSnap())
-
-    emblaApi.on('select', syncSelected)
-    emblaApi.on('reInit', syncSelected)
-
-    const frameId = requestAnimationFrame(syncSelected)
-
-    return () => {
-      cancelAnimationFrame(frameId)
-      emblaApi.off('select', syncSelected)
-      emblaApi.off('reInit', syncSelected)
-    }
-  }, [emblaApi])
-
-  const scrollTo = useCallback(
-    (index) => {
-      emblaApi?.scrollTo(index)
-    },
-    [emblaApi],
-  )
-
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
+    if (!slideCount || isPaused) return undefined
+    const timer = setInterval(() => {
+      setActiveIndex((current) => wrappedIndex(current + 1, slideCount))
+    }, autoplayMs)
+    return () => clearInterval(timer)
+  }, [autoplayMs, isPaused, slideCount])
 
   const handleKeyDown = useCallback(
     (event) => {
       if (event.key === 'ArrowLeft') {
         event.preventDefault()
-        scrollPrev()
-      }
-      if (event.key === 'ArrowRight') {
+        goPrev()
+      } else if (event.key === 'ArrowRight') {
         event.preventDefault()
-        scrollNext()
+        goNext()
       }
     },
-    [scrollNext, scrollPrev],
+    [goNext, goPrev],
   )
 
-  if (!slides.length) {
-    return null
-  }
+  const handleTouchStart = useCallback((event) => {
+    touchStartXRef.current = event.touches[0]?.clientX ?? null
+  }, [])
 
-  const nextIndex = (selectedIndex + 1) % slides.length
+  const handleTouchEnd = useCallback(
+    (event) => {
+      const startX = touchStartXRef.current
+      const endX = event.changedTouches[0]?.clientX ?? null
+      if (startX === null || endX === null) return
+      const delta = endX - startX
+      if (Math.abs(delta) < 44) return
+      if (delta < 0) goNext()
+      else goPrev()
+      touchStartXRef.current = null
+    },
+    [goNext, goPrev],
+  )
+
+  const { activeSlide, nextSlide, nextNextSlide } = useMemo(() => {
+    if (!slideCount) return {}
+    return {
+      activeSlide: slides[activeIndex],
+      nextSlide: slides[wrappedIndex(activeIndex + 1, slideCount)],
+      nextNextSlide: slides[wrappedIndex(activeIndex + 2, slideCount)],
+    }
+  }, [activeIndex, slideCount, slides])
+
+  if (!slideCount) return null
 
   return (
     <section
@@ -72,87 +82,94 @@ export function HeroCarousel({ slides = heroSlides }) {
       aria-label="Featured titles"
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={() => setIsPaused(false)}
     >
-      <div className="heroCarousel__viewportWrap">
-        <div className="heroCarousel__dots" role="tablist" aria-label="Slide indicators">
-          {slides.map((slide, index) => (
-            <button
-              key={slide.id}
-              type="button"
-              role="tab"
-              aria-selected={index === selectedIndex}
-              aria-label={`Slide ${index + 1} of ${slides.length}`}
-              className={`heroCarousel__dot${index === selectedIndex ? ' is-active' : ''}`}
-              onClick={() => scrollTo(index)}
-            />
-          ))}
+      <div className="heroCarousel__dots" role="tablist" aria-label="Slide indicators">
+        {slides.map((slide, index) => (
+          <button
+            key={slide.id}
+            type="button"
+            role="tab"
+            aria-selected={index === activeIndex}
+            aria-label={`Slide ${index + 1} of ${slideCount}`}
+            className={`heroCarousel__dot${index === activeIndex ? ' is-active' : ''}`}
+            onClick={() => goTo(index)}
+          />
+        ))}
+      </div>
+
+      <div className="heroCarousel__stage">
+        <div className="heroCarousel__main" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+          <article
+            key={activeSlide.id}
+            className="heroCarousel__card heroCarousel__card--active"
+            style={{ backgroundImage: `url(${activeSlide.image})` }}
+          >
+            <div className="heroCarousel__fade" />
+
+            <div className="heroCarousel__meta">
+              <span className="heroCarousel__pill">{activeSlide.duration}</span>
+              {activeSlide.tags.map((tag) => (
+                <span key={`${activeSlide.id}-${tag}`} className="heroCarousel__pill">
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <footer className="heroCarousel__footer">
+              <button type="button" className="heroCarousel__cta">
+                <span className="heroCarousel__ctaIcon">
+                  <Play size={15} fill="currentColor" />
+                </span>
+                <span className="heroCarousel__ctaText">
+                  <strong>{activeSlide.title}</strong>
+                  <small>{activeSlide.subtitle}</small>
+                </span>
+              </button>
+              <button type="button" className="heroCarousel__wishlist" aria-label="Add to list">
+                <Heart size={17} />
+              </button>
+            </footer>
+          </article>
         </div>
-        <button
-          type="button"
-          className="heroCarousel__arrow heroCarousel__arrow--prev"
-          aria-label="Previous slide"
-          onClick={scrollPrev}
-        >
-          <ChevronLeft size={18} strokeWidth={2} />
-        </button>
-        <button
-          type="button"
-          className="heroCarousel__arrow heroCarousel__arrow--next"
-          aria-label="Next slide"
-          onClick={scrollNext}
-        >
-          <ChevronRight size={18} strokeWidth={2} />
-        </button>
 
-        <div className="heroCarousel__viewport" ref={emblaRef}>
-          <div className="heroCarousel__track">
-            {slides.map((slide, index) => {
-              const isActive = index === selectedIndex
-              const isPreview = index === nextIndex && slides.length > 1
-              const slideMods = [
-                'heroCarousel__slide',
-                isActive ? 'heroCarousel__slide--active' : '',
-                isPreview ? 'heroCarousel__slide--preview' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')
+        <div className="heroCarousel__previewStack" aria-hidden>
+          <article
+            key={nextNextSlide.id}
+            className="heroCarousel__previewCard heroCarousel__previewCard--back"
+            style={{ backgroundImage: `url(${nextNextSlide.image})` }}
+          >
+            <div className="heroCarousel__previewFade" />
+          </article>
+          <article
+            key={nextSlide.id}
+            className="heroCarousel__previewCard heroCarousel__previewCard--front"
+            style={{ backgroundImage: `url(${nextSlide.image})` }}
+          >
+            <div className="heroCarousel__previewFade" />
+          </article>
+        </div>
 
-              return (
-                <div key={slide.id} className={slideMods}>
-                  <article
-                    className="heroCarousel__card"
-                    style={{ backgroundImage: `url(${slide.image})` }}
-                  >
-                    <div className="heroCarousel__fade" />
-
-                    <div className="heroCarousel__meta">
-                      <span className="heroCarousel__pill">{slide.duration}</span>
-                      {slide.tags.map((tag) => (
-                        <span key={`${slide.id}-${tag}`} className="heroCarousel__pill">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    <footer className="heroCarousel__footer">
-                      <button type="button" className="heroCarousel__cta">
-                        <span className="heroCarousel__ctaIcon">
-                          <Play size={15} fill="currentColor" />
-                        </span>
-                        <span className="heroCarousel__ctaText">
-                          <strong>{slide.title}</strong>
-                          <small>{slide.subtitle}</small>
-                        </span>
-                      </button>
-                      <button type="button" className="heroCarousel__wishlist" aria-label="Add to list">
-                        <Heart size={17} />
-                      </button>
-                    </footer>
-                  </article>
-                </div>
-              )
-            })}
-          </div>
+        <div className="heroCarousel__arrows">
+          <button
+            type="button"
+            className="heroCarousel__arrow heroCarousel__arrow--prev"
+            aria-label="Previous slide"
+            onClick={goPrev}
+          >
+            <ChevronLeft size={18} strokeWidth={2} />
+          </button>
+          <button
+            type="button"
+            className="heroCarousel__arrow heroCarousel__arrow--next"
+            aria-label="Next slide"
+            onClick={goNext}
+          >
+            <ChevronRight size={18} strokeWidth={2} />
+          </button>
         </div>
       </div>
     </section>

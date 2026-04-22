@@ -1,101 +1,58 @@
-/* Premium hero carousel — clipped viewport, peeking next slide */
+/*
+ * Hero carousel — reference-style layered stack:
+ * ~81% dominant hero, preview deck tucked behind the hero’s right edge,
+ * dots in top-right chrome (outside hero), arrows lower-right on stage.
+ */
 
 .heroCarousel {
   position: relative;
   width: 100%;
   max-width: 100%;
+  overflow: visible;
   outline: none;
+  isolation: isolate;
+  padding-top: 8px;
 }
 
 .heroCarousel:focus-visible {
   outline: 2px solid rgba(245, 247, 250, 0.35);
   outline-offset: 4px;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
-.heroCarousel__viewportWrap {
+.heroCarousel__stage {
   position: relative;
   width: 100%;
+  min-height: clamp(360px, 54vh, 600px);
 }
 
-.heroCarousel__viewport {
-  overflow: hidden;
-  width: 100%;
-  container-type: inline-size;
-  container-name: hero-carousel;
-  border-radius: 0;
-  touch-action: pan-x pinch-zoom;
-}
-
-.heroCarousel__track {
-  display: flex;
-  flex-direction: row;
-  gap: 0;
-  align-items: stretch;
-}
-
-/* Overlap successive slides slightly (layered deck like streaming references) */
-.heroCarousel__slide + .heroCarousel__slide {
-  margin-left: -52px;
-}
-
-.heroCarousel__slide {
+.heroCarousel__main {
   position: relative;
-  flex: 0 0 80%;
-  min-width: 0;
-  z-index: 0;
-  transition:
-    opacity 280ms ease,
-    transform 280ms ease,
-    filter 280ms ease;
-}
-
-@supports (width: 1cqw) {
-  .heroCarousel__slide {
-    flex: 0 0 80cqw;
-  }
-}
-
-.heroCarousel__slide--active {
-  z-index: 3;
-}
-
-.heroCarousel__slide--preview {
-  z-index: 2;
-}
-
-/* Non-active slides that aren’t the preview tuck behind */
-.heroCarousel__slide:not(.heroCarousel__slide--active):not(.heroCarousel__slide--preview) {
-  z-index: 0;
-}
-
-.heroCarousel__slide--preview .heroCarousel__card {
-  opacity: 0.86;
-  transform: scale(0.982);
-  filter: saturate(0.85) brightness(0.92);
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+  z-index: 4;
+  width: 81%;
+  max-width: 81%;
 }
 
 .heroCarousel__card {
   position: relative;
   isolation: isolate;
   width: 100%;
-  min-height: clamp(360px, 54vh, 580px);
-  border-radius: 30px;
+  min-height: clamp(360px, 54vh, 600px);
+  border-radius: 32px;
   overflow: hidden;
   background-color: #0b1620;
   background-size: cover;
   background-position: center;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 22px 56px rgba(0, 0, 0, 0.38);
-}
-
-.heroCarousel__slide--active .heroCarousel__card {
+  /* Strong shadow — reads as cast onto previews behind */
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    0 28px 64px rgba(0, 0, 0, 0.45),
-    12px 0 36px rgba(0, 0, 0, 0.22);
+    0 32px 70px rgba(0, 0, 0, 0.48),
+    24px 8px 48px rgba(0, 0, 0, 0.35),
+    40px 0 60px rgba(0, 0, 0, 0.22);
+}
+
+.heroCarousel__card--active {
+  animation: hero-fade-in 380ms ease;
 }
 
 .heroCarousel__fade {
@@ -103,16 +60,16 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(7, 19, 26, 0.05) 0%, rgba(7, 19, 26, 0.55) 48%, rgba(7, 19, 26, 0.88) 100%),
-    linear-gradient(92deg, rgba(7, 13, 18, 0.12), rgba(7, 13, 18, 0.42));
+    linear-gradient(180deg, rgba(7, 19, 26, 0.06) 0%, rgba(7, 19, 26, 0.56) 48%, rgba(7, 19, 26, 0.9) 100%),
+    linear-gradient(94deg, rgba(6, 12, 18, 0.14), rgba(6, 12, 18, 0.48));
   z-index: 0;
 }
 
 .heroCarousel__meta {
   position: absolute;
-  top: 18px;
-  left: 18px;
-  right: 72px;
+  top: 20px;
+  left: 20px;
+  right: 28px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -125,17 +82,17 @@
   font-size: 0.78rem;
   font-weight: 500;
   color: #f5f7fa;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(28, 36, 44, 0.48);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(36, 44, 52, 0.55);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
 .heroCarousel__footer {
   position: absolute;
-  left: 16px;
-  right: 16px;
-  bottom: 18px;
+  left: 18px;
+  right: 18px;
+  bottom: 20px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -170,8 +127,8 @@
 }
 
 .heroCarousel__ctaIcon {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   display: grid;
   place-items: center;
@@ -191,7 +148,7 @@
 }
 
 .heroCarousel__ctaText strong {
-  font-size: clamp(1.15rem, 2.6vw, 1.85rem);
+  font-size: clamp(1.2rem, 2.6vw, 1.88rem);
   font-weight: 600;
   line-height: 1.15;
   letter-spacing: -0.03em;
@@ -204,8 +161,8 @@
 }
 
 .heroCarousel__wishlist {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.28);
   background: rgba(10, 16, 22, 0.42);
@@ -226,25 +183,25 @@
   filter: brightness(1.08);
 }
 
+/* Dots: top-right UI chrome — outside hero card (hero is only ~81% wide) */
 .heroCarousel__dots {
   position: absolute;
   top: 10px;
-  right: 52px;
-  z-index: 6;
+  right: 18px;
+  z-index: 8;
   display: flex;
   align-items: center;
-  gap: 8px;
-  pointer-events: auto;
+  gap: 7px;
 }
 
 .heroCarousel__dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   padding: 0;
   border: none;
   border-radius: 999px;
   cursor: pointer;
-  background: rgba(245, 247, 250, 0.45);
+  background: rgba(245, 247, 250, 0.35);
   transition:
     width 220ms ease,
     background 220ms ease,
@@ -256,27 +213,94 @@
 }
 
 .heroCarousel__dot.is-active {
-  width: 16px;
-  background: rgba(245, 247, 250, 0.96);
+  width: 18px;
+  background: rgba(245, 247, 250, 0.98);
+}
+
+/*
+ * Preview stack: wide cards anchored right; most of front card sits under hero
+ * (~45–50% of card visible beyond hero edge per reference).
+ */
+.heroCarousel__previewStack {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: min(42vw, 520px);
+  height: 94%;
+  max-height: calc(clamp(360px, 54vh, 600px) * 0.94);
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.heroCarousel__previewCard {
+  position: absolute;
+  top: 50%;
+  overflow: hidden;
+  border-radius: 28px;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  transform-origin: right center;
+  transition:
+    opacity 420ms ease,
+    transform 420ms ease,
+    filter 420ms ease;
+}
+
+/* Front preview: dominant peek; slightly shorter than hero */
+.heroCarousel__previewCard--front {
+  right: 0;
+  width: min(100%, clamp(340px, 40vw, 500px));
+  height: 100%;
+  z-index: 3;
+  opacity: 0.92;
+  transform: translateY(-50%) scale(0.96);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.38);
+}
+
+/* Back preview: thin sliver (~10–15% of card reads as visible past front) */
+.heroCarousel__previewCard--back {
+  right: -6px;
+  width: min(100%, clamp(300px, 36vw, 440px));
+  height: 92%;
+  z-index: 2;
+  opacity: 0.26;
+  transform: translateY(-48%) scale(0.9);
+  filter: saturate(0.65) brightness(0.76);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+}
+
+.heroCarousel__previewFade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(7, 13, 19, 0.22), rgba(7, 13, 19, 0.78));
+}
+
+/* Arrows: lower-right of hero stage — not grouped with dots */
+.heroCarousel__arrows {
+  position: absolute;
+  right: 22px;
+  bottom: 18px;
+  z-index: 6;
+  display: flex;
+  gap: 10px;
 }
 
 .heroCarousel__arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(12, 18, 24, 0.45);
-  color: rgba(245, 247, 250, 0.65);
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 16, 22, 0.55);
+  color: rgba(245, 247, 250, 0.85);
   display: grid;
   place-items: center;
   cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  opacity: 0.35;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  opacity: 0.55;
   transition:
     opacity 180ms ease,
     color 180ms ease,
@@ -285,85 +309,93 @@
 }
 
 .heroCarousel__arrow:hover {
-  opacity: 0.95;
+  opacity: 1;
   color: #f5f7fa;
-  background: rgba(12, 18, 24, 0.65);
+  background: rgba(14, 22, 30, 0.72);
 }
 
-.heroCarousel__arrow--prev {
-  left: 8px;
-}
-
-.heroCarousel__arrow--next {
-  right: 8px;
+@keyframes hero-fade-in {
+  from {
+    opacity: 0.88;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 960px) {
-  .heroCarousel__slide + .heroCarousel__slide {
-    margin-left: -38px;
-  }
-
-  .heroCarousel__slide {
-    flex: 0 0 88%;
-  }
-
-  @supports (width: 1cqw) {
-    .heroCarousel__slide {
-      flex: 0 0 88cqw;
-    }
+  .heroCarousel__main {
+    width: 86%;
+    max-width: 86%;
   }
 
   .heroCarousel__card {
-    min-height: clamp(320px, 48vh, 480px);
-    border-radius: 26px;
+    min-height: clamp(320px, 48vh, 520px);
+    border-radius: 28px;
+  }
+
+  .heroCarousel__stage {
+    min-height: clamp(320px, 48vh, 520px);
+  }
+
+  .heroCarousel__previewStack {
+    width: min(48vw, 420px);
+    max-height: calc(clamp(320px, 48vh, 520px) * 0.94);
+  }
+
+  .heroCarousel__previewCard--front {
+    width: min(100%, clamp(280px, 44vw, 400px));
+  }
+
+  .heroCarousel__previewCard--back {
+    width: min(100%, clamp(240px, 40vw, 360px));
+    right: -10px;
+    opacity: 0.22;
   }
 
   .heroCarousel__dots {
-    right: 44px;
-    top: 12px;
+    top: 8px;
+    right: 12px;
   }
 
-  .heroCarousel__arrow {
-    opacity: 0.22;
+  .heroCarousel__arrows {
+    right: 14px;
+    bottom: 14px;
   }
 }
 
 @media (max-width: 640px) {
-  .heroCarousel__slide + .heroCarousel__slide {
-    margin-left: 0;
+  .heroCarousel {
+    padding-top: 0;
   }
 
-  .heroCarousel__slide {
-    flex: 0 0 100%;
+  .heroCarousel__main {
+    width: 100%;
+    max-width: 100%;
   }
 
-  @supports (width: 1cqw) {
-    .heroCarousel__slide {
-      flex: 0 0 100cqw;
-    }
-  }
-
-  .heroCarousel__slide--preview .heroCarousel__card {
-    opacity: 1;
-    transform: none;
-    filter: none;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 22px 56px rgba(0, 0, 0, 0.38);
-  }
-
-  .heroCarousel__card {
-    min-height: clamp(280px, 42vh, 420px);
-    border-radius: 22px;
+  .heroCarousel__previewStack {
+    display: none;
   }
 
   .heroCarousel__dots {
-    right: 12px;
-    top: 12px;
+    top: 10px;
+    right: 10px;
   }
 
-  .heroCarousel__arrow {
-    display: none;
+  .heroCarousel__arrows {
+    right: 10px;
+    bottom: 12px;
+    opacity: 0.85;
+  }
+
+  .heroCarousel__card {
+    min-height: clamp(280px, 42vh, 440px);
+    border-radius: 22px;
+  }
+
+  .heroCarousel__stage {
+    min-height: clamp(280px, 42vh, 440px);
   }
 
   .heroCarousel__meta {
@@ -371,7 +403,7 @@
   }
 
   .heroCarousel__ctaText strong {
-    font-size: 1.05rem;
+    font-size: 1.08rem;
   }
 
   .heroCarousel__ctaText small {

@@ -9,6 +9,8 @@ function wrappedIndex(index, length) {
 
 export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [previousIndex, setPreviousIndex] = useState(null)
+  const [isTransitioning, setIsTransitioning] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const touchStartXRef = useRef(null)
 
@@ -17,7 +19,13 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
   const goTo = useCallback(
     (index) => {
       if (!slideCount) return
-      setActiveIndex(wrappedIndex(index, slideCount))
+      const nextIndex = wrappedIndex(index, slideCount)
+      setActiveIndex((current) => {
+        if (current === nextIndex) return current
+        setPreviousIndex(current)
+        setIsTransitioning(true)
+        return nextIndex
+      })
     },
     [slideCount],
   )
@@ -28,10 +36,26 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
   useEffect(() => {
     if (!slideCount || isPaused) return undefined
     const timer = setInterval(() => {
-      setActiveIndex((current) => wrappedIndex(current + 1, slideCount))
+      setActiveIndex((current) => {
+        const next = wrappedIndex(current + 1, slideCount)
+        if (next !== current) {
+          setPreviousIndex(current)
+          setIsTransitioning(true)
+        }
+        return next
+      })
     }, autoplayMs)
     return () => clearInterval(timer)
   }, [autoplayMs, isPaused, slideCount])
+
+  useEffect(() => {
+    if (!isTransitioning) return undefined
+    const timer = setTimeout(() => {
+      setIsTransitioning(false)
+      setPreviousIndex(null)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [isTransitioning])
 
   const handleKeyDown = useCallback(
     (event) => {
@@ -50,14 +74,6 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
     touchStartXRef.current = event.touches[0]?.clientX ?? null
   }, [])
 
-  const handleCardClick = useCallback(
-    (event) => {
-      if (event.target.closest('button')) return
-      goNext()
-    },
-    [goNext],
-  )
-
   const handleTouchEnd = useCallback(
     (event) => {
       const startX = touchStartXRef.current
@@ -72,14 +88,16 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
     [goNext, goPrev],
   )
 
-  const { activeSlide, peek1, peek2 } = useMemo(() => {
+  const { activeSlide, previousSlide, peek1, peek2 } = useMemo(() => {
     if (!slideCount) return {}
     return {
       activeSlide: slides[activeIndex],
+      previousSlide:
+        previousIndex === null ? null : slides[wrappedIndex(previousIndex, slideCount)],
       peek1: slides[wrappedIndex(activeIndex + 1, slideCount)],
       peek2: slides[wrappedIndex(activeIndex + 2, slideCount)],
     }
-  }, [activeIndex, slideCount, slides])
+  }, [activeIndex, previousIndex, slideCount, slides])
 
   if (!slideCount) return null
 
@@ -111,11 +129,41 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
 
       <div className="heroCarousel__stage">
         <div className="heroCarousel__main" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+          {isTransitioning && previousSlide ? (
+            <article
+              className="heroCarousel__card heroCarousel__card--layer heroCarousel__card--leaving"
+              style={{ backgroundImage: `url(${previousSlide.image})` }}
+            >
+              <div className="heroCarousel__fade" />
+
+              <div className="heroCarousel__meta">
+                <span className="heroCarousel__pill">{previousSlide.duration}</span>
+                {previousSlide.tags.map((tag) => (
+                  <span key={`${previousSlide.id}-${tag}`} className="heroCarousel__pill">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <footer className="heroCarousel__footer">
+                <button type="button" className="heroCarousel__cta">
+                  <span className="heroCarousel__ctaIcon">
+                    <Play size={15} fill="currentColor" />
+                  </span>
+                  <span className="heroCarousel__ctaText">
+                    <strong>{previousSlide.title}</strong>
+                    <small>{previousSlide.subtitle}</small>
+                  </span>
+                </button>
+                <button type="button" className="heroCarousel__wishlist" aria-label="Add to list">
+                  <Heart size={17} />
+                </button>
+              </footer>
+            </article>
+          ) : null}
           <article
-            key={activeSlide.id}
-            className="heroCarousel__card heroCarousel__card--active"
+            className="heroCarousel__card heroCarousel__card--layer heroCarousel__card--active"
             style={{ backgroundImage: `url(${activeSlide.image})` }}
-            onClick={handleCardClick}
           >
             <div className="heroCarousel__fade" />
 
@@ -151,6 +199,7 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
             key={peek2.id}
             className="heroCarousel__previewCard heroCarousel__previewCard--peek2"
             style={{ backgroundImage: `url(${peek2.image})` }}
+            onClick={() => goTo(activeIndex + 2)}
           >
             <div className="heroCarousel__previewFade heroCarousel__previewFade--deep" />
           </article>
@@ -159,6 +208,7 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
             key={peek1.id}
             className="heroCarousel__previewCard heroCarousel__previewCard--peek1"
             style={{ backgroundImage: `url(${peek1.image})` }}
+            onClick={() => goTo(activeIndex + 1)}
           >
             <div className="heroCarousel__previewFade" />
           </article>

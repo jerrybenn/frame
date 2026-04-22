@@ -35,7 +35,7 @@ export function Sidebar({ items, continueWatchingCards }) {
         <span className="brand__icon" aria-hidden>
           <TvMinimalPlay size={24} strokeWidth={2} />
         </span>
-        <span className="brand__text">serivia</span>
+        <span className="brand__text">frame</span>
       </Link>
 
       <nav className="sidebar__nav" aria-label="Primary navigation">

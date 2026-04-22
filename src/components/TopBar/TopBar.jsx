@@ -1,4 +1,4 @@
-import { Bell, SlidersHorizontal } from 'lucide-react'
+import { Bell } from 'lucide-react'
 import { CategoryDropdown } from '../CategoryDropdown/CategoryDropdown'
 import { ProfileBadge } from '../ProfileBadge/ProfileBadge'
 import { SearchBar } from '../SearchBar/SearchBar'
@@ -13,12 +13,9 @@ export function TopBar({ categoryOptions, activeCategory, setActiveCategory }) {
         setActiveCategory={setActiveCategory}
       />
       <SearchBar />
-      <div className="topbar__actions">
-        <button type="button" className="glass-square-btn" aria-label="Filters">
-          <SlidersHorizontal size={17} />
-        </button>
-        <button type="button" className="glass-square-btn" aria-label="Notifications">
-          <Bell size={17} />
+      <div className="topbar__trailing">
+        <button type="button" className="topbar__notify" aria-label="Notifications">
+          <Bell size={18} strokeWidth={1.75} />
         </button>
         <ProfileBadge />
       </div>

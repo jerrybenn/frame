@@ -100,6 +100,21 @@ export const genres = [
   'Drama',
   'Fantasy',
   'Horror',
+  'Sci-Fi',
+  'Romance',
+  'Thriller',
+  'Animation',
+  'Documentary',
+  'Mystery',
+  'Musical',
+  'Anime',
+  'Sports',
+  'Kids',
+  'Western',
+  'Biography',
+  'History',
+  'War',
+  'Music',
 ]
 
 export const movies = [

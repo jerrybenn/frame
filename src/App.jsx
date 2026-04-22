@@ -1,10 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import { ComingSoonPage } from './pages/ComingSoonPage'
-import { FavoritesPage } from './pages/FavoritesPage'
-import { HomePage } from './pages/HomePage'
-import { SettingsPage } from './pages/SettingsPage'
-import { SupportPage } from './pages/SupportPage'
-import { TrendingPage } from './pages/TrendingPage'
+import { ComingSoonPage } from './pages/ComingSoonPage/ComingSoonPage'
+import { FavoritesPage } from './pages/FavoritesPage/FavoritesPage'
+import { HomePage } from './pages/HomePage/HomePage'
+import { SettingsPage } from './pages/SettingsPage/SettingsPage'
+import { SupportPage } from './pages/SupportPage/SupportPage'
+import { TrendingPage } from './pages/TrendingPage/TrendingPage'
 
 function App() {
   return (

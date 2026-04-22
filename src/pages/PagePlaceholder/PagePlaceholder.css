@@ -1,0 +1,23 @@
+.page-placeholder {
+  padding: clamp(14px, 3vw, 28px) 6px 36px;
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(8, 14, 20, 0.32);
+  min-height: min(280px, 42vh);
+}
+
+.page-placeholder__title {
+  margin: 0 0 10px;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: #f5f7fa;
+}
+
+.page-placeholder__subtitle {
+  margin: 0;
+  max-width: 42ch;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(154, 164, 175, 0.96);
+}

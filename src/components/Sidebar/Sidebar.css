@@ -1,0 +1,140 @@
+.sidebar {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100%;
+  padding: 32px 26px 28px;
+  position: relative;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  right: 0;
+  width: 1px;
+  height: calc(100% - 48px);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(255, 255, 255, 0.03) 45%,
+    transparent 100%
+  );
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 40px;
+  flex-shrink: 0;
+}
+
+.brand__icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: #141a1f;
+  background: #f2c94c;
+  box-shadow: 0 4px 14px rgba(242, 201, 76, 0.22);
+}
+
+.brand__icon svg {
+  display: block;
+}
+
+.brand__text {
+  color: #f5f7fa;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-transform: lowercase;
+}
+
+.brand.brand--link {
+  align-self: flex-start;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand.brand--link:focus-visible {
+  outline: 1px solid rgba(255, 255, 255, 0.28);
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.sidebar__nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar__nav-group--secondary {
+  margin-top: 18px;
+}
+
+.sidebar__spacer {
+  flex: 1 1 auto;
+  min-height: 12px;
+  max-height: 30px;
+}
+
+.continue-section {
+  padding-top: 20px;
+  flex-shrink: 0;
+}
+
+.continue-section__title {
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #9aa4af;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.continue-section__title-icon {
+  flex-shrink: 0;
+  opacity: 0.92;
+}
+
+.continue-section__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+@media (max-width: 1100px) {
+  .sidebar {
+    border-right: none;
+  }
+
+  .sidebar::after {
+    display: none;
+  }
+
+  .continue-section {
+    padding-top: 20px;
+  }
+
+  .sidebar__spacer {
+    max-height: 48px;
+  }
+}

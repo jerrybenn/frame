@@ -1,10 +1,10 @@
 export const sidebarItems = [
-  { id: 'home', label: 'Home', icon: 'House', active: true },
-  { id: 'favorites', label: 'Favorites', icon: 'Heart' },
-  { id: 'coming-soon', label: 'Coming soon', icon: 'CalendarDays' },
-  { id: 'trending', label: 'Trending', icon: 'SquareChartGantt' },
-  { id: 'settings', label: 'Settings', icon: 'Settings' },
-  { id: 'support', label: 'Support', icon: 'MessageCircleQuestion' },
+  { id: 'home', label: 'Home', icon: 'House', path: '/' },
+  { id: 'favorites', label: 'Favorites', icon: 'Heart', path: '/favorites' },
+  { id: 'coming-soon', label: 'Coming soon', icon: 'CalendarDays', path: '/coming-soon' },
+  { id: 'trending', label: 'Trending', icon: 'SquareChartGantt', path: '/trending' },
+  { id: 'settings', label: 'Settings', icon: 'Settings', path: '/settings' },
+  { id: 'support', label: 'Support', icon: 'MessageCircleQuestion', path: '/support' },
 ]
 
 export const categoryOptions = ['Movies', 'Series', 'Shows', 'Anime']
@@ -33,6 +33,22 @@ export const continueWatchingCards = [
     progress: 34,
     image:
       'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=640&q=80',
+  },
+  {
+    id: 'cw-4',
+    title: 'Dune: Part Two',
+    elapsed: 'S1.E3',
+    progress: 72,
+    image:
+      'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?auto=format&fit=crop&w=640&q=80',
+  },
+  {
+    id: 'cw-5',
+    title: 'Oppenheimer',
+    elapsed: '2h 08min',
+    progress: 18,
+    image:
+      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=640&q=80',
   },
 ]
 

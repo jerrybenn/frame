@@ -1,7 +1,7 @@
 /*
  * Hero carousel — reference-style:
  * ~83% hero, two preview strips tucked behind (overlap + scale, soft shadows).
- * Dots top-right above peek zone; arrows hidden until hover (optional in ref).
+ * Dots top-right above peek zone; click the hero card (not controls) to advance.
  */
 
 .heroCarousel {
@@ -23,7 +23,7 @@
 .heroCarousel__stage {
   position: relative;
   width: 100%;
-  min-height: clamp(360px, 54vh, 600px);
+  min-height: clamp(430px, 62vh, 740px);
 }
 
 .heroCarousel__main {
@@ -37,7 +37,7 @@
   position: relative;
   isolation: isolate;
   width: 100%;
-  min-height: clamp(360px, 54vh, 600px);
+  min-height: clamp(430px, 62vh, 740px);
   border-radius: 30px;
   overflow: hidden;
   background-color: #0b1620;
@@ -52,6 +52,7 @@
 
 .heroCarousel__card--active {
   animation: hero-fade-in 320ms ease;
+  cursor: pointer;
 }
 
 .heroCarousel__fade {
@@ -226,7 +227,7 @@
   right: 0;
   width: min(38vw, 420px);
   height: 92%;
-  max-height: calc(clamp(360px, 54vh, 600px) * 0.92);
+  max-height: calc(clamp(430px, 62vh, 740px) * 0.92);
   transform: translateY(-50%);
   pointer-events: none;
   z-index: 1;
@@ -247,9 +248,9 @@
     filter 380ms ease;
 }
 
-/* Peek 1 — primary strip behind hero */
+/* Peek 1 — primary strip behind hero (positive right = tuck farther under hero) */
 .heroCarousel__previewCard--peek1 {
-  right: 0;
+  right: 25px;
   width: min(100%, clamp(300px, 34vw, 440px));
   height: 97%;
   z-index: 3;
@@ -280,50 +281,6 @@
   background: linear-gradient(180deg, rgba(7, 13, 19, 0.32), rgba(7, 13, 19, 0.82));
 }
 
-/*
- * Reference screenshot: no visible arrows — reveal on hover / focus for UX.
- */
-.heroCarousel__arrows {
-  position: absolute;
-  right: 20px;
-  bottom: 96px;
-  z-index: 6;
-  display: flex;
-  gap: 8px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 200ms ease;
-}
-
-.heroCarousel:hover .heroCarousel__arrows,
-.heroCarousel:focus-within .heroCarousel__arrows {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.heroCarousel__arrow {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(12, 18, 24, 0.5);
-  color: rgba(245, 247, 250, 0.88);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  transition:
-    background 180ms ease,
-    color 180ms ease;
-}
-
-.heroCarousel__arrow:hover {
-  color: #f5f7fa;
-  background: rgba(16, 24, 32, 0.68);
-}
-
 @keyframes hero-fade-in {
   from {
     opacity: 0.9;
@@ -340,17 +297,17 @@
   }
 
   .heroCarousel__card {
-    min-height: clamp(320px, 48vh, 520px);
+    min-height: clamp(390px, 56vh, 640px);
     border-radius: 26px;
   }
 
   .heroCarousel__stage {
-    min-height: clamp(320px, 48vh, 520px);
+    min-height: clamp(390px, 56vh, 640px);
   }
 
   .heroCarousel__previewStack {
     width: min(42vw, 380px);
-    max-height: calc(clamp(320px, 48vh, 520px) * 0.92);
+    max-height: calc(clamp(390px, 56vh, 640px) * 0.92);
   }
 
   .heroCarousel__previewCard--peek1 {
@@ -366,13 +323,6 @@
   .heroCarousel__dots {
     top: 10px;
     right: 12px;
-  }
-
-  .heroCarousel__arrows {
-    right: 12px;
-    bottom: 80px;
-    opacity: 0.45;
-    pointer-events: auto;
   }
 }
 
@@ -395,20 +345,13 @@
     right: 10px;
   }
 
-  .heroCarousel__arrows {
-    right: 10px;
-    bottom: 70px;
-    opacity: 0.75;
-    pointer-events: auto;
-  }
-
   .heroCarousel__card {
-    min-height: clamp(280px, 42vh, 440px);
+    min-height: clamp(320px, 50vh, 560px);
     border-radius: 22px;
   }
 
   .heroCarousel__stage {
-    min-height: clamp(280px, 42vh, 440px);
+    min-height: clamp(320px, 50vh, 560px);
   }
 
   .heroCarousel__meta {

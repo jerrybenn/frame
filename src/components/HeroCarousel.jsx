@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, Heart, Play } from 'lucide-react'
+import { Heart, Play } from 'lucide-react'
 import { heroSlides } from '../data/homeContent'
 import './heroCarousel.css'
 
@@ -49,6 +49,14 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
   const handleTouchStart = useCallback((event) => {
     touchStartXRef.current = event.touches[0]?.clientX ?? null
   }, [])
+
+  const handleCardClick = useCallback(
+    (event) => {
+      if (event.target.closest('button')) return
+      goNext()
+    },
+    [goNext],
+  )
 
   const handleTouchEnd = useCallback(
     (event) => {
@@ -107,6 +115,7 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
             key={activeSlide.id}
             className="heroCarousel__card heroCarousel__card--active"
             style={{ backgroundImage: `url(${activeSlide.image})` }}
+            onClick={handleCardClick}
           >
             <div className="heroCarousel__fade" />
 
@@ -155,24 +164,6 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
           </article>
         </div>
 
-        <div className="heroCarousel__arrows">
-          <button
-            type="button"
-            className="heroCarousel__arrow heroCarousel__arrow--prev"
-            aria-label="Previous slide"
-            onClick={goPrev}
-          >
-            <ChevronLeft size={18} strokeWidth={2} />
-          </button>
-          <button
-            type="button"
-            className="heroCarousel__arrow heroCarousel__arrow--next"
-            aria-label="Next slide"
-            onClick={goNext}
-          >
-            <ChevronRight size={18} strokeWidth={2} />
-          </button>
-        </div>
       </div>
     </section>
   )

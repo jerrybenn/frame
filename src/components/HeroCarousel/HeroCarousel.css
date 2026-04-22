@@ -1,7 +1,7 @@
 /*
  * Hero carousel — reference-style:
  * ~83% hero, two preview strips tucked behind (overlap + scale, soft shadows).
- * Dots top-right above peek zone; click the hero card (not controls) to advance.
+ * Dots top-right above peek zone; click peek cards to advance.
  */
 
 .heroCarousel {
@@ -42,8 +42,6 @@
   border-radius: 30px;
   overflow: hidden;
   background-color: #0b1620;
-  background-size: cover;
-  background-position: center;
   /* Softer depth — reference relies on overlap more than harsh shadow */
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
@@ -52,7 +50,7 @@
 }
 
 .heroCarousel__card--active {
-  animation: hero-card-enter 1000ms ease both;
+  animation: hero-card-enter 580ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 .heroCarousel__card--layer {
@@ -62,7 +60,17 @@
 
 .heroCarousel__card--leaving {
   pointer-events: none;
-  animation: hero-card-leave 1000ms ease both;
+  animation: hero-card-leave 460ms ease-out both;
+}
+
+.heroCarousel__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
 }
 
 .heroCarousel__fade {
@@ -72,7 +80,7 @@
   background:
     linear-gradient(180deg, rgba(7, 19, 26, 0.05) 0%, rgba(7, 19, 26, 0.52) 48%, rgba(7, 19, 26, 0.88) 100%),
     linear-gradient(94deg, rgba(6, 12, 18, 0.1), rgba(6, 12, 18, 0.42));
-  z-index: 0;
+  z-index: 1;
 }
 
 .heroCarousel__meta {
@@ -83,7 +91,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .heroCarousel__pill {
@@ -107,7 +115,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 14px;
-  z-index: 2;
+  z-index: 3;
 }
 
 .heroCarousel__cta {
@@ -248,24 +256,32 @@
   top: 50%;
   overflow: hidden;
   border-radius: 26px;
-  background-size: cover;
-  background-position: center;
   border: 1px solid rgba(255, 255, 255, 0.06);
   transform-origin: right center;
   transition:
-    opacity 380ms ease,
-    transform 380ms ease,
-    filter 380ms ease;
+    opacity 320ms ease,
+    transform 320ms ease,
+    filter 320ms ease;
   cursor: pointer;
+}
+
+.heroCarousel__previewMedia {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
 }
 
 /* Peek 1 — primary strip behind hero (positive right = tuck farther under hero) */
 .heroCarousel__previewCard--peek1 {
-  right: 25px;
+  right: 34px;
   width: min(100%, clamp(300px, 34vw, 440px));
   height: 97%;
   z-index: 3;
-  opacity: 0.88;
+  opacity: 0.78;
   transform: translateY(-50%) scale(0.955);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
 }

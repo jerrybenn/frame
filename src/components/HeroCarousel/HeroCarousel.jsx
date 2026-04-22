@@ -48,15 +48,6 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
     return () => clearInterval(timer)
   }, [autoplayMs, isPaused, slideCount])
 
-  useEffect(() => {
-    if (!isTransitioning) return undefined
-    const timer = setTimeout(() => {
-      setIsTransitioning(false)
-      setPreviousIndex(null)
-    }, 1000)
-    return () => clearTimeout(timer)
-  }, [isTransitioning])
-
   const handleKeyDown = useCallback(
     (event) => {
       if (event.key === 'ArrowLeft') {
@@ -99,6 +90,20 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
     }
   }, [activeIndex, previousIndex, slideCount, slides])
 
+  useEffect(() => {
+    const preloadSources = [activeSlide?.image, peek1?.image, peek2?.image].filter(Boolean)
+    preloadSources.forEach((src) => {
+      const img = new Image()
+      img.src = src
+    })
+  }, [activeSlide?.image, peek1?.image, peek2?.image])
+
+  const handleLeavingAnimationEnd = useCallback((event) => {
+    if (event.animationName !== 'hero-card-leave') return
+    setIsTransitioning(false)
+    setPreviousIndex(null)
+  }, [])
+
   if (!slideCount) return null
 
   return (
@@ -132,8 +137,9 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
           {isTransitioning && previousSlide ? (
             <article
               className="heroCarousel__card heroCarousel__card--layer heroCarousel__card--leaving"
-              style={{ backgroundImage: `url(${previousSlide.image})` }}
+              onAnimationEnd={handleLeavingAnimationEnd}
             >
+              <img className="heroCarousel__media" src={previousSlide.image} alt="" />
               <div className="heroCarousel__fade" />
 
               <div className="heroCarousel__meta">
@@ -163,8 +169,8 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
           ) : null}
           <article
             className="heroCarousel__card heroCarousel__card--layer heroCarousel__card--active"
-            style={{ backgroundImage: `url(${activeSlide.image})` }}
           >
+            <img className="heroCarousel__media" src={activeSlide.image} alt={activeSlide.title} />
             <div className="heroCarousel__fade" />
 
             <div className="heroCarousel__meta">
@@ -198,18 +204,18 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
           <article
             key={peek2.id}
             className="heroCarousel__previewCard heroCarousel__previewCard--peek2"
-            style={{ backgroundImage: `url(${peek2.image})` }}
             onClick={() => goTo(activeIndex + 2)}
           >
+            <img className="heroCarousel__previewMedia" src={peek2.image} alt="" />
             <div className="heroCarousel__previewFade heroCarousel__previewFade--deep" />
           </article>
           {/* First tier — main peek tucked under hero right edge */}
           <article
             key={peek1.id}
             className="heroCarousel__previewCard heroCarousel__previewCard--peek1"
-            style={{ backgroundImage: `url(${peek1.image})` }}
             onClick={() => goTo(activeIndex + 1)}
           >
+            <img className="heroCarousel__previewMedia" src={peek1.image} alt={peek1.title} />
             <div className="heroCarousel__previewFade" />
           </article>
         </div>

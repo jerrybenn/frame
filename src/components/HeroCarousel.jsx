@@ -64,12 +64,12 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
     [goNext, goPrev],
   )
 
-  const { activeSlide, nextSlide, nextNextSlide } = useMemo(() => {
+  const { activeSlide, peek1, peek2 } = useMemo(() => {
     if (!slideCount) return {}
     return {
       activeSlide: slides[activeIndex],
-      nextSlide: slides[wrappedIndex(activeIndex + 1, slideCount)],
-      nextNextSlide: slides[wrappedIndex(activeIndex + 2, slideCount)],
+      peek1: slides[wrappedIndex(activeIndex + 1, slideCount)],
+      peek2: slides[wrappedIndex(activeIndex + 2, slideCount)],
     }
   }, [activeIndex, slideCount, slides])
 
@@ -137,17 +137,19 @@ export function HeroCarousel({ slides = heroSlides, autoplayMs = 5000 }) {
         </div>
 
         <div className="heroCarousel__previewStack" aria-hidden>
+          {/* Second tier — thin vertical strip behind peek 1 */}
           <article
-            key={nextNextSlide.id}
-            className="heroCarousel__previewCard heroCarousel__previewCard--back"
-            style={{ backgroundImage: `url(${nextNextSlide.image})` }}
+            key={peek2.id}
+            className="heroCarousel__previewCard heroCarousel__previewCard--peek2"
+            style={{ backgroundImage: `url(${peek2.image})` }}
           >
-            <div className="heroCarousel__previewFade" />
+            <div className="heroCarousel__previewFade heroCarousel__previewFade--deep" />
           </article>
+          {/* First tier — main peek tucked under hero right edge */}
           <article
-            key={nextSlide.id}
-            className="heroCarousel__previewCard heroCarousel__previewCard--front"
-            style={{ backgroundImage: `url(${nextSlide.image})` }}
+            key={peek1.id}
+            className="heroCarousel__previewCard heroCarousel__previewCard--peek1"
+            style={{ backgroundImage: `url(${peek1.image})` }}
           >
             <div className="heroCarousel__previewFade" />
           </article>

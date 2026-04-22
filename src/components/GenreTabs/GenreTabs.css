@@ -64,9 +64,9 @@
 
 .genre-tab {
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(202, 224, 236, 0.12);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
   color: #f5f7fa;
   font: inherit;
   font-size: 0.92rem;
@@ -76,9 +76,11 @@
   min-height: 44px;
   cursor: pointer;
   white-space: nowrap;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.16);
   transition:
     background 180ms ease,
     border-color 180ms ease,
@@ -118,13 +120,15 @@
   display: grid;
   place-items: center;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(202, 224, 236, 0.12);
+  background: rgba(255, 255, 255, 0.06);
   color: rgba(245, 247, 250, 0.92);
   cursor: pointer;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 24px rgba(0, 0, 0, 0.16);
   transition:
     background 160ms ease,
     color 160ms ease,
